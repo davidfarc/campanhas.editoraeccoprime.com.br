@@ -50,8 +50,8 @@ window.SEE_CONFIG = {
   // Também aceita caminho de .mp4 no próprio servidor ou URL de player
   // (Panda Video), caso um dia mude.
   videos: {
-    "aula-experimental": "",
-    "apresentacao-material": ""
+    "aula-experimental": "https://youtu.be/JanSOYuSLYE",
+    "apresentacao-material": "https://youtu.be/TBEibl8zOz4"
   },
 
   // WhatsApp do comercial (somente números, com 55 e DDD). CONFIRMAR o número antes de publicar.
