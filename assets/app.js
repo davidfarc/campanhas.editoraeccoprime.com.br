@@ -39,18 +39,15 @@
       dados.enviado_em = new Date().toISOString();
 
       var destino = form.getAttribute("data-redirect");
+      var slug = location.pathname.split("/").filter(Boolean).pop() || "";
       var btn = form.querySelector("button[type=submit]");
       btn.disabled = true;
 
       try { sessionStorage.setItem("see_lead_nome", (dados.nome || "").split(" ")[0]); } catch (x) {}
-      try {
-        var slug = destino.replace(/\/*assistir\/*$/, "") ||
-                   location.pathname.split("/").filter(Boolean).pop();
-        sessionStorage.setItem("see_lead_ok", slug);
-      } catch (x) {}
 
       if (!C.endpoint) { // modo de teste
         console.warn("SEE_CONFIG.endpoint vazio: dados não enviados", dados);
+        console.warn("Modo de teste: nenhuma conversão é contada.");
         location.href = destino; return;
       }
       var opts = { method: "POST" };
@@ -62,7 +59,13 @@
         opts.body = JSON.stringify(dados);
       }
       fetch(C.endpoint, opts)
-        .then(function (r) { if (!r.ok) throw new Error(r.status); location.href = destino; })
+        .then(function (r) {
+          if (!r.ok) throw new Error(r.status);
+          // Marca o envio aceito. So aqui: e isso que libera a conversao na
+          // pagina do video. No clique do botao, nunca.
+          try { sessionStorage.setItem("see_lead_ok", slug); } catch (x) {}
+          location.href = destino;
+        })
         .catch(function () {
           btn.disabled = false;
           erro.textContent = "Não conseguimos enviar agora. Tente de novo em instantes.";

@@ -7,21 +7,33 @@ window.SEE_CONFIG = {
   endpoint: "",
 
   // Pixels e tags. O que ficar vazio simplesmente nao carrega.
+  // Instalacao direta, como na landing de matriculas: NAO usar contêiner do GTM
+  // junto, senao tudo dispara em dobro.
   tags: {
-    gtmId: "",                 // Google Tag Manager, ex.: "GTM-ABC1234"
-    ga4Id: "",                 // Google Analytics 4, ex.: "G-ABCDE12345"
-    metaPixelId: "",           // Meta (Facebook/Instagram), ex.: "123456789012345"
-    googleAdsId: "",           // Google Ads, ex.: "AW-123456789"
+    ga4Id: "G-773MYPYDRC",
+    googleAdsId: "AW-827566705",
 
-    // Rotulo da conversao no Google Ads, um por pagina (parte depois da barra)
+    // Rotulo da conversao do Google Ads, um por pagina (parte depois da barra).
+    // Hoje os dois usam o mesmo rotulo da acao "Instrucoes" (id 755441474), que
+    // ja soma os cadastros da landing de matriculas. Para separar por campanha,
+    // criar acoes novas no Google Ads e trocar os rotulos aqui.
     googleAdsLabels: {
-      "aula-experimental": "",
-      "apresentacao-material": ""
+      "aula-experimental": "OCwzCMK-nOgCEPHUzooD",
+      "apresentacao-material": "OCwzCMK-nOgCEPHUzooD"
     },
 
-    // false = a pagina do video conta conversao para quem chegar nela
-    // true  = so conta para quem enviou o formulario nesta mesma sessao
-    conversaoSomenteAposFormulario: false
+    // Os tres pixels da escola
+    metaPixelIds: ["2893495017422005", "1107580709416779", "863714567549260"],
+
+    clarityId: "z9imrt4i7l",
+
+    // Contêiner do GTM. Deixar VAZIO: as tags acima ja sao instalacao direta.
+    // Preencher so se um dia abandonarmos a instalacao direta.
+    gtmId: "",
+
+    // true  = so conta conversao de quem teve o envio aceito pelo servidor
+    // false = qualquer visita a pagina do video conta
+    conversaoSomenteAposFormulario: true
   },
 
   // Formato do envio: "json" (application/json) ou "form" (application/x-www-form-urlencoded)
