@@ -43,6 +43,11 @@
       btn.disabled = true;
 
       try { sessionStorage.setItem("see_lead_nome", (dados.nome || "").split(" ")[0]); } catch (x) {}
+      try {
+        var slug = destino.replace(/\/*assistir\/*$/, "") ||
+                   location.pathname.split("/").filter(Boolean).pop();
+        sessionStorage.setItem("see_lead_ok", slug);
+      } catch (x) {}
 
       if (!C.endpoint) { // modo de teste
         console.warn("SEE_CONFIG.endpoint vazio: dados não enviados", dados);

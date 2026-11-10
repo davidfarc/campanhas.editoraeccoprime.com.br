@@ -6,6 +6,24 @@ window.SEE_CONFIG = {
   // Enquanto estiver vazio, o formulário não envia nada e só redireciona (modo de teste).
   endpoint: "",
 
+  // Pixels e tags. O que ficar vazio simplesmente nao carrega.
+  tags: {
+    gtmId: "",                 // Google Tag Manager, ex.: "GTM-ABC1234"
+    ga4Id: "",                 // Google Analytics 4, ex.: "G-ABCDE12345"
+    metaPixelId: "",           // Meta (Facebook/Instagram), ex.: "123456789012345"
+    googleAdsId: "",           // Google Ads, ex.: "AW-123456789"
+
+    // Rotulo da conversao no Google Ads, um por pagina (parte depois da barra)
+    googleAdsLabels: {
+      "aula-experimental": "",
+      "apresentacao-material": ""
+    },
+
+    // false = a pagina do video conta conversao para quem chegar nela
+    // true  = so conta para quem enviou o formulario nesta mesma sessao
+    conversaoSomenteAposFormulario: false
+  },
+
   // Formato do envio: "json" (application/json) ou "form" (application/x-www-form-urlencoded)
   formato: "json",
 
