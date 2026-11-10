@@ -3,6 +3,12 @@
   "name": "campanhas-see",
   "compatibility_date": "2026-11-10",
 
+  // Dominio proprio. O DNS da zona ja esta na Cloudflare, entao o
+  // registro de campanhas. e criado sozinho no primeiro deploy.
+  "routes": [
+    { "pattern": "campanhas.editoraeccoprime.com.br", "custom_domain": true }
+  ],
+
   // Só o conteúdo de public/ vai ao ar. Nada mais do repositório
   // (.git, LEIA-ME, configuração) é publicado.
   "assets": {

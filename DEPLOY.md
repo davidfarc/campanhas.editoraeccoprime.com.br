@@ -32,9 +32,17 @@ publica sozinho.
 
 ## Domínio
 
-Depois do primeiro deploy, em **Settings → Domains & Routes → Add custom
-domain**, usar `campanhas.editoraeccoprime.com.br`. O DNS já está na
-Cloudflare, então o registro é criado automaticamente.
+Já declarado em `wrangler.jsonc`:
+
+```jsonc
+"routes": [
+  { "pattern": "campanhas.editoraeccoprime.com.br", "custom_domain": true }
+]
+```
+
+A zona `editoraeccoprime.com.br` já usa os nameservers da Cloudflare
+(`tom` e `connie`), e o subdomínio `campanhas.` ainda não existe. No
+primeiro deploy o registro é criado sozinho, com certificado.
 
 ## Os vídeos NÃO vão no Workers
 
