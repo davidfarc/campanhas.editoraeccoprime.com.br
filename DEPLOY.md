@@ -45,23 +45,24 @@ que quebra o avanço na linha do tempo e a reprodução no Safari/iPhone.
 
 Por isso `public/.assetsignore` exclui `*.mp4`.
 
-Onde hospedar, em ordem de preferência:
+**Decidido: YouTube, com vídeos não listados.**
 
-1. **R2 com bucket público** em `videos.editoraeccoprime.com.br`.
-   Precisa habilitar o R2 no painel primeiro (ainda não está ativo).
-2. **Cloudflare Stream** — resolve sozinho, mas é pago por minuto.
-3. **Panda Video / YouTube não listado** — trocar por uma URL de player.
-
-Escolhido o destino, apontar em `public/assets/config.js`:
+Subir cada vídeo ao canal como **Não listado** e colar o link em
+`public/assets/config.js`:
 
 ```js
 videos: {
-  "aula-experimental": "https://videos.editoraeccoprime.com.br/aula-experimental.mp4",
-  "apresentacao-material": "https://videos.editoraeccoprime.com.br/apresentacao-material.mp4"
+  "aula-experimental": "https://youtu.be/XXXXXXXXXXX",
+  "apresentacao-material": "https://youtu.be/YYYYYYYYYYY"
 }
 ```
 
-O `app.js` já aceita tanto `.mp4` direto quanto URL de player em iframe.
+Qualquer formato de link serve (`watch?v=`, `youtu.be/`, `embed/`,
+`shorts/`, ou só o ID de 11 caracteres). O `app.js` converte sozinho para
+`youtube-nocookie.com/embed/...?rel=0&modestbranding=1&playsinline=1`.
+
+Os `.mp4` continuam no repositório como originais, mas não são publicados.
+As capas `.jpg` continuam em uso: são os cards da página inicial.
 
 ## Tags
 

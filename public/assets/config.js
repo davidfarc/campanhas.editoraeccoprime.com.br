@@ -39,12 +39,19 @@ window.SEE_CONFIG = {
   // Formato do envio: "json" (application/json) ou "form" (application/x-www-form-urlencoded)
   formato: "json",
 
-  // Vídeos. Por padrão tocam direto da pasta /videos/ do próprio servidor.
-  // Se um dia forem para o Panda Video ou YouTube, basta trocar pela URL do player (embed), ex.:
-  //   "https://player-vz-XXXX.tv.pandavideo.com.br/embed/?v=XXXXXXXX"
+  // Vídeos. Basta COLAR O LINK DO YOUTUBE aqui — qualquer formato serve
+  // (youtube.com/watch?v=..., youtu.be/..., ou só o ID de 11 caracteres).
+  // A página monta sozinha o player, no domínio sem cookies e sem sugerir
+  // vídeos de outros canais no final.
+  //
+  // Use vídeos NÃO LISTADOS: não aparecem na busca nem no canal, mas
+  // quem tiver o link assiste. É o mesmo nível de proteção de antes.
+  //
+  // Também aceita caminho de .mp4 no próprio servidor ou URL de player
+  // (Panda Video), caso um dia mude.
   videos: {
-    "aula-experimental": "/videos/aula-experimental.mp4",
-    "apresentacao-material": "/videos/apresentacao-material.mp4"
+    "aula-experimental": "",
+    "apresentacao-material": ""
   },
 
   // WhatsApp do comercial (somente números, com 55 e DDD). CONFIRMAR o número antes de publicar.

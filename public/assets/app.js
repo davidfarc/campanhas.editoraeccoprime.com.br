@@ -75,10 +75,26 @@
   }
 
   /* ---------- Página do vídeo ---------- */
+  /* Aceita link do YouTube em qualquer formato (watch, youtu.be, embed,
+     shorts, live) ou só o ID de 11 caracteres. Devolve a URL de embed
+     no domínio sem cookies, sem vídeos sugeridos de outros canais. */
+  function youtubeEmbed(src) {
+    src = String(src || "");
+    var m = src.match(
+      /(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/|v\/))([A-Za-z0-9_-]{11})/
+    );
+    var id = m ? m[1] : (/^[A-Za-z0-9_-]{11}$/.test(src) ? src : null);
+    if (!id) return null;
+    return "https://www.youtube-nocookie.com/embed/" + id +
+           "?rel=0&modestbranding=1&playsinline=1";
+  }
+
   var player = document.querySelector("[data-video]");
   if (player) {
     var src = (C.videos || {})[player.getAttribute("data-video")];
-    if (src && /\.mp4(\?|$)/i.test(src)) {
+    var yt = youtubeEmbed(src);
+    if (yt) src = yt;
+    if (src && !yt && /\.mp4(\?|$)/i.test(src)) {
       var v = document.createElement("video");
       v.src = src; v.controls = true; v.playsInline = true; v.preload = "metadata";
       v.poster = src.replace(/\.mp4(\?.*)?$/i, ".jpg");
