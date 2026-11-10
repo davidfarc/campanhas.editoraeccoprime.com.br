@@ -1,0 +1,55 @@
+PÁGINAS DE CAPTAÇÃO: SISTEMA DE ENSINO ECCOPRIME
+================================================
+
+O QUE TEM AQUI
+  aula-experimental/            formulário da aula experimental (Jaidson, Eccoprime Academy)
+  aula-experimental/assistir/   página do vídeo, aberta depois do envio do formulário
+  apresentacao-material/        formulário da apresentação do material (Ana)
+  apresentacao-material/assistir/  página do vídeo da apresentação
+  assets/config.js              ÚNICO arquivo a editar (envio, vídeos, WhatsApp, links)
+  assets/app.js                 lógica do formulário e do player
+  videos/                       os dois vídeos editados e as capas
+  assets/style.css              visual (verde #184C40, dourado #B6A27F, Libre Baskerville e DM Sans)
+
+Páginas estáticas: basta subir a pasta inteira no servidor, por exemplo em
+  editoraeccoprime.com.br/aula-experimental/
+  editoraeccoprime.com.br/apresentacao-material/
+
+PASSO A PASSO
+1. Logo: colocar o brasão do SEE em assets/logo-see.png (fundo transparente, versão clara para fundo verde).
+   Sem o arquivo, a página mostra só o nome em texto.
+
+2. Envio para o Exact Spotter: em assets/config.js, preencher "endpoint" com o endereço que recebe os leads
+   (API do Spotter, webhook ou ferramenta de integração). "formato" aceita "json" ou "form".
+   Se a chave de acesso do Spotter não puder ficar exposta no navegador, apontar o endpoint para um
+   script no servidor que repasse ao Spotter. A chave nunca deve ficar nos arquivos da página.
+   Enquanto "endpoint" estiver vazio, o formulário não envia nada e só redireciona (modo de teste).
+
+   Campos enviados:
+     nome, whatsapp, whatsapp_numeros (55 + DDD + número), email, escola, cargo, cidade_uf,
+     alunos (opcional), consentimento (sim/não), origem, pagina, enviado_em,
+     utm_source, utm_medium, utm_campaign, utm_content
+   "origem" identifica de onde veio o lead:
+     "Aula experimental: Cosmovisão (Jaidson)"  ou  "Apresentação do material (Ana)"
+   Por enquanto os dois vão para o comercial da editora; a origem separa os leads da Academy.
+
+3. Vídeos: já vêm na pasta /videos/ (versões leves, cerca de 50 MB cada, prontas para web, com capa .jpg).
+   A pasta precisa ficar na RAIZ do domínio: editoraeccoprime.com.br/videos/
+   Se subir em outro lugar, ajustar o caminho em "videos" no config.js.
+   (Opcional, para o futuro: Panda Video ou YouTube não listado; é só trocar pela URL do player.)
+
+4. WhatsApp: conferir o número em "whatsapp" (somente números, com 55 e DDD). Usado no botão
+   "Fale com um consultor" da página da apresentação.
+
+5. Link da Academy: colocar em "linkAcademy" o endereço da página da Eccoprime Academy no site
+   (botão "Conhecer as formações" da página da aula).
+
+6. Teste: preencher os dois formulários, conferir se o lead chega no Spotter com a origem certa e se a
+   página do vídeo abre e toca no celular.
+
+OBSERVAÇÕES
+- As páginas /assistir/ estão marcadas para não aparecer no Google (noindex).
+- Quem tiver o link direto de /assistir/ consegue ver o vídeo sem preencher. Para o nosso uso isso é
+  aceitável; a restrição de domínio do Panda impede que o vídeo seja tocado fora do site.
+- Para campanhas, usar links com UTM, ex.:
+  .../apresentacao-material/?utm_source=instagram&utm_medium=bio&utm_campaign=apresentacao-material
