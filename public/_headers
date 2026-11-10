@@ -5,5 +5,8 @@
   Cache-Control: public, max-age=86400
 
 # As páginas do vídeo já têm <meta robots noindex>; isto reforça no cabeçalho.
-/*/assistir/*
+/aula-experimental/assistir/
+  X-Robots-Tag: noindex, nofollow
+
+/apresentacao-material/assistir/
   X-Robots-Tag: noindex, nofollow

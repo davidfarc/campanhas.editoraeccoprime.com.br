@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "campanhas-see",
+  "name": "campanhas-editoraeccoprime-com-br",
   "compatibility_date": "2026-11-10",
 
   // Dominio proprio. O DNS da zona ja esta na Cloudflare, entao o
