@@ -1,0 +1,1 @@
+# campanhas.editoraeccoprime.com.br
