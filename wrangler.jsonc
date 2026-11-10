@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "campanhas-see",
+  "compatibility_date": "2026-11-10",
+
+  // Só o conteúdo de public/ vai ao ar. Nada mais do repositório
+  // (.git, LEIA-ME, configuração) é publicado.
+  "assets": {
+    "directory": "./public",
+    // /aula-experimental → /aula-experimental/index.html
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  }
+}

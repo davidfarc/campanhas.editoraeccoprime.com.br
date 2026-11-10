@@ -1,0 +1,3 @@
+# Os vídeos estouram o limite de 25 MiB por arquivo do Workers Static Assets.
+# Ficam versionados no repositório, mas são servidos de fora (ver DEPLOY.md).
+*.mp4
