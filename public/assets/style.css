@@ -14,8 +14,12 @@ a{color:inherit}
 .topo{background:var(--verde);color:#fff;position:relative;overflow:hidden}
 .topo::after{content:"";position:absolute;right:-140px;top:-140px;width:420px;height:420px;border:1px solid rgba(182,162,127,.25);border-radius:50%}
 .marca{display:flex;align-items:center;gap:12px;padding:22px 0}
-.marca img{height:44px;width:auto}
+.marca img{height:46px;width:auto}
 .marca span{font-family:var(--serif);font-size:15px;letter-spacing:.02em;color:#fff}
+/* O logo ja traz "Sistema de Ensino Eccoprime" escrito, entao o texto ao lado
+   so aparece quando a imagem nao carrega (o onerror remove o <img>). */
+.marca img + span{display:none}
+@media(min-width:900px){.marca img{height:58px}}
 .hero{display:grid;gap:36px;padding:28px 0 56px;position:relative;z-index:1}
 .kicker{font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--dourado)}
 h1{font-family:var(--serif);font-weight:700;font-size:clamp(30px,6.4vw,46px);line-height:1.18;margin:12px 0 18px}
