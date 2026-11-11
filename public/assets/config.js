@@ -4,7 +4,7 @@
 window.SEE_CONFIG = {
   // Endereço que recebe os dados do formulário (Exact Spotter, webhook ou integração).
   // Enquanto estiver vazio, o formulário não envia nada e só redireciona (modo de teste).
-  endpoint: "",
+  endpoint: "/api/lead",
 
   // Pixels e tags. O que ficar vazio simplesmente nao carrega.
   // Instalacao direta, como na landing de matriculas: NAO usar contêiner do GTM
