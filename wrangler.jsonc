@@ -2,6 +2,8 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "campanhas-editoraeccoprime-com-br",
   "compatibility_date": "2026-11-10",
+  "main": "./src/index.js",
+  "observability": { "enabled": true },
 
   // Dominio proprio. O DNS da zona ja esta na Cloudflare, entao o
   // registro de campanhas. e criado sozinho no primeiro deploy.
@@ -14,6 +16,9 @@
   "assets": {
     "directory": "./public",
     // /aula-experimental → /aula-experimental/index.html
+    "binding": "ASSETS",
+    // So /api/* passa pelo Worker; o resto e servido como arquivo.
+    "run_worker_first": ["/api/*"],
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "404-page"
   }

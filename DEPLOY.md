@@ -72,6 +72,62 @@ Qualquer formato de link serve (`watch?v=`, `youtu.be/`, `embed/`,
 Os `.mp4` continuam no repositório como originais, mas não são publicados.
 As capas `.jpg` continuam em uso: são os cards da página inicial.
 
+## Envio dos leads para o Exact Spotter
+
+O formulário envia para `/api/lead`, no próprio domínio. Quem atende é o
+Worker em `src/index.js`, que chama a API do Spotter. A chave fica como
+secret na Cloudflare e **nunca** aparece no navegador.
+
+### Variáveis
+
+| Nome | Obrigatório | Para que serve |
+|---|---|---|
+| `SPOTTER_TOKEN` | sim | Token Exact API (Configurações → Integrações) |
+| `SPOTTER_FUNNEL_ID` | não | Funil de destino; sem ele, vai para o funil padrão |
+| `SPOTTER_STAGE` | não | Nome da etapa (exige o funil) |
+| `SPOTTER_SDR_EMAIL` | não | Pré-vendedor responsável; sem ele o Spotter sorteia |
+| `SPOTTER_DUPLICIDADE` | não | `"true"` faz o Spotter recusar duplicados |
+
+O token entra como **secret** (fica oculto). Os demais podem ser
+variáveis de texto comuns.
+
+Pelo painel: Worker → Settings → Variables and Secrets.
+Pela linha de comando:
+
+```
+npx wrangler secret put SPOTTER_TOKEN
+```
+
+### Como o lead é montado
+
+No Spotter o "lead" é a **escola**, e a pessoa é um **contato** dela.
+Então são duas chamadas:
+
+1. `POST /v3/LeadsAdd` — `name` = nome da escola, `source` = a origem que
+   distingue Academy de editora, telefone com DDI separado, cidade/UF
+   quando dá para ler a sigla, e uma `description` com cargo, número de
+   alunos, consentimento, página e UTMs.
+2. `POST /v3/personsAdd` — nome, e-mail, telefone e cargo da pessoa,
+   como contato principal (`mainContact: true`).
+
+Se a segunda falhar, a primeira já valeu: o Worker responde sucesso para
+não travar a pessoa na frente do vídeo, e registra o erro no log.
+
+### Ligar e desligar
+
+Enquanto `endpoint` estiver vazio no `config.js`, o site nem chama o
+Worker (modo de teste). Para ligar:
+
+```js
+endpoint: "/api/lead",
+```
+
+Só fazer isso **depois** de cadastrar o `SPOTTER_TOKEN` — sem ele o
+Worker responde 503 e a pessoa vê erro no formulário.
+
+Os logs ficam em Workers → Logs (observability está ligado). O Worker
+nunca grava os dados do lead no log, só os erros da API.
+
 ## Tags
 
 Ver o bloco `tags` em `public/assets/config.js`. Instalação direta, sem
