@@ -9,8 +9,12 @@
   // aqui em vez do painel: assim o deploy sempre aplica o mesmo destino.
   // So o SPOTTER_TOKEN e secret.
   "vars": {
-    "SPOTTER_FUNNEL_NAME": "Leads inativos",
-    "SPOTTER_STAGE": "inativos"
+    "SPOTTER_FUNNEL_NAME": "Editora Eccoprime Site Educativo",
+    // Cada formulario entra na sua propria etapa.
+    "SPOTTER_STAGES": {
+      "aula-experimental": "Entrada Aula Experimental",
+      "apresentacao-material": "Entrada Apresentação Material"
+    }
   },
 
   // Dominio proprio. O DNS da zona ja esta na Cloudflare, entao o

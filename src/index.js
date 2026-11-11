@@ -5,16 +5,20 @@
    Segredo:   SPOTTER_TOKEN        (wrangler secret / painel)
    Opcionais: SPOTTER_FUNNEL_NAME  nome do funil de destino (resolvido na API)
               SPOTTER_FUNNEL_ID    id do funil, se preferir fixar
-              SPOTTER_STAGE        nome da etapa (exige o funil)
+              SPOTTER_STAGES       etapa por formulário, ex.:
+                                   { "aula-experimental": "Entrada Aula Experimental" }
+              SPOTTER_STAGE        etapa única, usada quando não há SPOTTER_STAGES
               SPOTTER_SDR_EMAIL    pré-vendedor responsável
               SPOTTER_DUPLICIDADE  "true" bloqueia duplicados
    ========================================================= */
 
 const API = "https://api.exactspotter.com/v3";
 
+/* Rótulo que o formulário envia -> apelido do formulário.
+   O apelido é a chave usada para escolher a etapa do funil. */
 const ORIGENS = {
-  "Aula experimental: Cosmovisão (Jaidson)": true,
-  "Apresentação do material (Ana)": true
+  "Aula experimental: Cosmovisão (Jaidson)": "aula-experimental",
+  "Apresentação do material (Ana)": "apresentacao-material"
 };
 
 function json(dados, status) {
@@ -125,7 +129,8 @@ export default {
       return json({ erro: "sem_consentimento" }, 400);
     }
 
-    const origemLead = ORIGENS[d.origem] ? d.origem : "Páginas de captação SEE";
+    const formulario = ORIGENS[texto(d.origem, 120)] || null;
+    const origemLead = formulario ? d.origem : "Páginas de captação SEE";
 
     const descricao = [
       "Contato: " + nome,
@@ -156,14 +161,21 @@ export default {
       if (funil) lead.funnelId = funil.id;
     }
 
+    // Cada formulário entra na sua própria etapa do funil.
+    let etapas = env.SPOTTER_STAGES || null;
+    if (typeof etapas === "string") {
+      try { etapas = JSON.parse(etapas); } catch (e) { etapas = null; }
+    }
+    const etapa = (etapas && formulario && etapas[formulario]) || env.SPOTTER_STAGE || "";
+
     // O Spotter so aceita etapa junto com o funil.
-    if (lead.funnelId && env.SPOTTER_STAGE) {
-      lead.stage = env.SPOTTER_STAGE;
+    if (lead.funnelId && etapa) {
+      lead.stage = etapa;
       if (funilCache && funilCache.id === lead.funnelId &&
           funilCache.etapas.length &&
-          !funilCache.etapas.some((e) => chave(e) === chave(env.SPOTTER_STAGE))) {
+          !funilCache.etapas.some((e) => chave(e) === chave(etapa))) {
         console.error(
-          "Etapa '" + env.SPOTTER_STAGE + "' nao existe nesse funil | etapas: " +
+          "Etapa '" + etapa + "' nao existe nesse funil | etapas: " +
           funilCache.etapas.join(" / ")
         );
       }
