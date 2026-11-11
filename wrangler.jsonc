@@ -5,6 +5,14 @@
   "main": "./src/index.js",
   "observability": { "enabled": true },
 
+  // Destino dos leads no Spotter. Nao sao segredos, entao ficam versionados
+  // aqui em vez do painel: assim o deploy sempre aplica o mesmo destino.
+  // So o SPOTTER_TOKEN e secret.
+  "vars": {
+    "SPOTTER_FUNNEL_NAME": "Leads inativos",
+    "SPOTTER_STAGE": "inativos"
+  },
+
   // Dominio proprio. O DNS da zona ja esta na Cloudflare, entao o
   // registro de campanhas. e criado sozinho no primeiro deploy.
   "routes": [
