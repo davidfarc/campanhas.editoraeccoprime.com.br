@@ -83,7 +83,8 @@ secret na Cloudflare e **nunca** aparece no navegador.
 | Nome | Obrigatório | Para que serve |
 |---|---|---|
 | `SPOTTER_TOKEN` | sim | Token Exact API (Configurações → Integrações) |
-| `SPOTTER_FUNNEL_ID` | não | Funil de destino; sem ele, vai para o funil padrão |
+| `SPOTTER_FUNNEL_NAME` | não | Nome do funil de destino; o Worker descobre o id sozinho |
+| `SPOTTER_FUNNEL_ID` | não | Id do funil, se preferir fixar (tem prioridade sobre o nome) |
 | `SPOTTER_STAGE` | não | Nome da etapa (exige o funil) |
 | `SPOTTER_SDR_EMAIL` | não | Pré-vendedor responsável; sem ele o Spotter sorteia |
 | `SPOTTER_DUPLICIDADE` | não | `"true"` faz o Spotter recusar duplicados |
@@ -124,6 +125,10 @@ endpoint: "/api/lead",
 
 Só fazer isso **depois** de cadastrar o `SPOTTER_TOKEN` — sem ele o
 Worker responde 503 e a pessoa vê erro no formulário.
+
+Se o funil do `SPOTTER_FUNNEL_NAME` não for encontrado, o lead ainda é
+criado — vai para o funil padrão — e o log registra o nome procurado e a
+lista dos funis que existem. O mesmo vale para a etapa.
 
 Os logs ficam em Workers → Logs (observability está ligado). O Worker
 nunca grava os dados do lead no log, só os erros da API.

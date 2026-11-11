@@ -3,7 +3,8 @@
    Fica aqui, e não no navegador, para a chave nunca ficar exposta.
 
    Segredo:   SPOTTER_TOKEN        (wrangler secret / painel)
-   Opcionais: SPOTTER_FUNNEL_ID    id do funil de destino
+   Opcionais: SPOTTER_FUNNEL_NAME  nome do funil de destino (resolvido na API)
+              SPOTTER_FUNNEL_ID    id do funil, se preferir fixar
               SPOTTER_STAGE        nome da etapa (exige o funil)
               SPOTTER_SDR_EMAIL    pré-vendedor responsável
               SPOTTER_DUPLICIDADE  "true" bloqueia duplicados
@@ -34,6 +35,45 @@ function cidadeUf(v) {
   const m = texto(v, 120).match(/^(.+?)[,\/-]\s*([A-Za-zÀ-ÿ]{2})\s*$/);
   if (!m) return null;
   return { city: m[1].trim(), state: m[2].toUpperCase(), country: "Brasil" };
+}
+
+/* Acentos e maiúsculas fora, para comparar nome de funil e de etapa. */
+function chave(v) {
+  return String(v == null ? "" : v)
+    .normalize("NFD").replace(/[̀-ͯ]/g, "")
+    .trim().toLowerCase();
+}
+
+async function spotterGet(caminho, token) {
+  const r = await fetch(API + caminho, { headers: { token_exact: token } });
+  if (!r.ok) return null;
+  try { return await r.json(); } catch (e) { return null; }
+}
+
+/* Resolve o funil pelo nome uma vez e guarda enquanto a instância viver. */
+let funilCache = null;
+
+async function resolverFunil(token, nome) {
+  if (funilCache && funilCache.nome === nome) return funilCache;
+
+  const funis = await spotterGet("/Funnels", token);
+  const lista = (funis && funis.value) || [];
+  const achado = lista.find((f) => chave(f.value) === chave(nome));
+  if (!achado) {
+    console.error(
+      "Funil nao encontrado: " + nome +
+      " | disponiveis: " + lista.map((f) => f.value).join(" / ")
+    );
+    return null;
+  }
+
+  const etapas = await spotterGet("/stages", token);
+  const doFunil = (((etapas && etapas.value) || [])
+    .filter((e) => e.funnelId === achado.id)
+    .map((e) => e.value));
+
+  funilCache = { nome: nome, id: achado.id, etapas: doFunil };
+  return funilCache;
 }
 
 async function spotter(caminho, token, corpo) {
@@ -109,8 +149,25 @@ export default {
 
     const local = cidadeUf(d.cidade_uf);
     if (local) Object.assign(lead, local);
-    if (env.SPOTTER_FUNNEL_ID) lead.funnelId = Number(env.SPOTTER_FUNNEL_ID);
-    if (env.SPOTTER_FUNNEL_ID && env.SPOTTER_STAGE) lead.stage = env.SPOTTER_STAGE;
+    if (env.SPOTTER_FUNNEL_ID) {
+      lead.funnelId = Number(env.SPOTTER_FUNNEL_ID);
+    } else if (env.SPOTTER_FUNNEL_NAME) {
+      const funil = await resolverFunil(env.SPOTTER_TOKEN, env.SPOTTER_FUNNEL_NAME);
+      if (funil) lead.funnelId = funil.id;
+    }
+
+    // O Spotter so aceita etapa junto com o funil.
+    if (lead.funnelId && env.SPOTTER_STAGE) {
+      lead.stage = env.SPOTTER_STAGE;
+      if (funilCache && funilCache.id === lead.funnelId &&
+          funilCache.etapas.length &&
+          !funilCache.etapas.some((e) => chave(e) === chave(env.SPOTTER_STAGE))) {
+        console.error(
+          "Etapa '" + env.SPOTTER_STAGE + "' nao existe nesse funil | etapas: " +
+          funilCache.etapas.join(" / ")
+        );
+      }
+    }
     if (env.SPOTTER_SDR_EMAIL) lead.sdrEmail = env.SPOTTER_SDR_EMAIL;
 
     const r1 = await spotter("/LeadsAdd", env.SPOTTER_TOKEN, {
